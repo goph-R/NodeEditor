@@ -11,7 +11,6 @@ class App(QObject):
 
     def __init__(self, args):
         super(App, self).__init__()
-
         QCoreApplication.setOrganizationName('Dynart')
         QCoreApplication.setApplicationName('NodeEditor')
         self._qApp = QApplication(args)

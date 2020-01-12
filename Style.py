@@ -13,15 +13,13 @@
 import os
 
 from PySide2.QtGui import QPalette, QColor, Qt
-from PySide2.QtWidgets import QProxyStyle, QStyleFactory
+from PySide2.QtWidgets import QProxyStyle, QStyleFactory, QApplication
 
 
 class Style(QProxyStyle):
 
-    StyleBase = None
-
     def __init__(self, style=None):
-        super(Style, self).__init__(style if style else self.styleBase())
+        super(Style, self).__init__(style if style else QStyleFactory.create('Fusion'))
         self._qss = self._load()
 
     def _load(self):
@@ -30,19 +28,11 @@ class Style(QProxyStyle):
             data = file.read()
         return data.replace(':/images', resourcesPath + '/images')
 
-    def styleBase(self, style=None):
-        Style.StyleBase = QStyleFactory.create('Fusion') if not style else style
-        return Style.StyleBase
-
-    def baseStyle(self):
-        return self.styleBase()
-
     def polish(self, data):
         super(Style, self).polish(data)
-        className = data.__class__.__name__
-        if className == 'QPalette':
+        if data.__class__ == QPalette:
             self.polishPalette(data)
-        elif className == 'QApplication':
+        elif data.__class__ == QApplication:
             self.polishApplication(data)
 
     def polishPalette(self, palette):
