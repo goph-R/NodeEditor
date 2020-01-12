@@ -1,5 +1,5 @@
 from component.Box import Box
-from component.Component import Component
+from component.General import General
 from component.Sphere import Sphere
 from component.Translate import Translate
 from node.Node import Node
@@ -9,7 +9,7 @@ from node.NodeType import NodeType
 class NodeFactory(object):
 
     def create(self, type, name='', parent=None):
-        general = Component()
+        general = General()
         general.setName(name)
         result = Node(type, parent)
         result.addComponent(general)
