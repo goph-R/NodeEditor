@@ -1,41 +1,45 @@
-from property.Property import Property
-from property.PropertyType import PropertyType
+from PySide2.QtCore import Property
+
 from node.Node import Node
+from node.NodeProperty import NodeProperty
 from node.NodeType import NodeType
 
 
 class Translate(Node):
 
-    X = 2
-    Y = 3
-    Z = 4
-
-    def createProperties(self):
-        base = super(Translate, self).createProperties()
-        result = self.extendProperties(base, NodeType.Translate, [
-            Property('X', PropertyType.Float, 0),
-            Property('Y', PropertyType.Float, 0),
-            Property('Z', PropertyType.Float, 0)
-        ])
-        return result
-
-    def type(self):
-        return NodeType.Translate
+    def __init__(self, parent):
+        super(Translate, self).__init__(parent)
+        self._x = 0
+        self._y = 0
+        self._z = 0
 
     def x(self):
-        return self.data(self.X)
+        return self._x
 
     def setX(self, value):
-        self.setData(self.X, value)
+        self._x = value
 
     def y(self):
-        return self.data(self.Y)
+        return self._y
 
     def setY(self, value):
-        self.setData(self.Y, value)
+        self._y = value
 
     def z(self):
-        return self.data(self.Z)
+        return self._z
 
     def setZ(self, value):
-        self.setData(self.Z, value)
+        self._z = value
+
+    xProperty = Property(float, x, setX)
+    yProperty = Property(float, y, setY)
+    zProperty = Property(float, z, setZ)
+
+    def createPropertyMap(self):
+        base = super(Translate, self).createPropertyMap()
+        result = self.extendPropertyMap(base, NodeType.Translate, [
+            NodeProperty('X', 'x', float),
+            NodeProperty('Y', 'y', float),
+            NodeProperty('Z', 'z', float)
+        ])
+        return result

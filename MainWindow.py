@@ -1,5 +1,5 @@
 from PySide2.QtCore import Qt, QSettings
-from PySide2.QtWidgets import QDockWidget, QMainWindow, QTreeView, QPushButton
+from PySide2.QtWidgets import QDockWidget, QMainWindow, QTreeView, QPushButton, QWidget
 
 from node.Box import Box
 from node.NodeFactory import NodeFactory
@@ -75,12 +75,12 @@ class MainWindow(QMainWindow):
 
     def buttonClicked(self):
         indices = self._treeView.selectionModel().selectedIndexes()
-        if len(indices) == 1:
-            index = indices[0]
-            self._model.set(index, Node.Name, 'CLICKED')
-            node = index.internalPointer()
-            if node.type() == NodeType.Box:
-                self._model.set(index, Box.Width, 50)
+        if len(indices) != 1:
+            return
+        index = indices[0]
+        node = index.internalPointer()
+        node.setName('CLICKED')
+        self._model.dataChanged.emit(index, index)
 
     def closeEvent(self, event):
         self._app.exit()

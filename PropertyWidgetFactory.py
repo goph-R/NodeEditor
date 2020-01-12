@@ -1,6 +1,5 @@
 from PySide2.QtWidgets import QLineEdit, QDoubleSpinBox, QComboBox
 
-from property.PropertyType import PropertyType
 from node.NodeType import NodeType
 
 
@@ -10,13 +9,13 @@ class PropertyWidgetFactory(object):
         result = None
         type = property.type()
         readOnly = property.readOnly()
-        if type == PropertyType.String:
+        if type == str:
             result = QLineEdit()
             result.setReadOnly(readOnly)
-        elif type == PropertyType.Float:
+        elif type == float:
             result = QDoubleSpinBox()
             result.setReadOnly(readOnly)
-        elif type == PropertyType.NodeType:
+        elif type == NodeType:
             result = QComboBox()
             result.addItems(NodeType.Names())
             result.setDisabled(readOnly)
@@ -24,6 +23,6 @@ class PropertyWidgetFactory(object):
 
     def mapToProperty(self, type):
         result = None
-        if type == PropertyType.NodeType:
+        if type == NodeType:
             result = 'currentIndex'
         return result

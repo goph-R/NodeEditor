@@ -1,60 +1,57 @@
-from property.Property import Property
-from property.PropertyType import PropertyType
+from PySide2.QtCore import QObject, Property
+
+from node.NodeProperty import NodeProperty
 from node.NodeType import NodeType
 
 
-class Node(object):
-
-    Name = 0
-    Type = 1
+class Node(QObject):
 
     def __init__(self, parent):
+        super(Node, self).__init__(parent)
         self._children = []
         self._parent = parent
-        self._properties = self.createAllProperties()
-        self._values = [0 for i in range(len(self._properties))]
-        self.setDefaultValues()
+        self._name = ''
+        self._type = NodeType.General
+        self._propertyMap = self.createPropertyMap()
+        self.setPropertyColumns()
         if parent is not None:
             parent.addChild(self)
 
     def name(self):
-        return self.data(self.Name)
+        return self._name
 
     def setName(self, value):
-        self.setData(self.Name, value)
+        self._name = value
 
     def type(self):
-        return NodeType.General
+        return self._type
 
-    def createProperties(self):
+    def propertyMap(self):
+        return self._propertyMap
+
+    nameProperty = Property(str, name, setName)
+    typeProperty = Property(int, type)
+
+    def createPropertyMap(self):
         base = [
-            Property('Name', PropertyType.String, ''),
-            Property('Type', PropertyType.NodeType, self.type(), True)
+            NodeProperty('Name', 'name', str),
+            NodeProperty('Type', 'type', NodeType, True)
         ]
-        self.setPropertiesGroup(base, NodeType.General)
+        self.setNodeType(NodeType.General, base)
         return base
 
-    def extendProperties(self, base, type, properties):
-        self.setPropertiesGroup(properties, type)
-        base.extend(properties)
+    def extendPropertyMap(self, base, nodeType, result):
+        self.setNodeType(nodeType, result)
+        base.extend(result)
         return base
 
-    def createAllProperties(self):
-        result = self.createProperties()
-        for column, property in enumerate(result):
+    def setNodeType(self, nodeType, properties):
+        for column, property in enumerate(properties):
+            property.setNodeType(nodeType)
+
+    def setPropertyColumns(self):
+        for column, property in enumerate(self._propertyMap):
             property.setColumn(column)
-        return result
-
-    def setDefaultValues(self):
-        for column, property in enumerate(self.properties()):
-            self.setData(column, property.defaultValue())
-
-    def setPropertiesGroup(self, properties, group):
-        for property in properties:
-            property.setGroup(group)
-
-    def properties(self):
-        return self._properties
 
     def addChild(self, child):
         self._children.append(child)
@@ -82,7 +79,9 @@ class Node(object):
         self._children.remove(self._children[position])
 
     def data(self, column):
-        return self._values[column]
+        name = self._propertyMap[column].name()
+        return self.property(name)
 
     def setData(self, column, value):
-        self._values[column] = value
+        name = self._propertyMap[column].name()
+        self.setProperty(name, value)

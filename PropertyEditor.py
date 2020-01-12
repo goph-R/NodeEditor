@@ -21,8 +21,8 @@ class PropertyEditor(QTreeWidget):
 
     def __init__(self):
         super(PropertyEditor, self).__init__()
-        self._currentGroup = None
-        self._groupItem = None
+        self._currentNodeType = None
+        self._nodeTypeItem = None
         self._dataMapper = QDataWidgetMapper()
         self._widgetFactory = None
         self._nodeFactory = None
@@ -36,45 +36,45 @@ class PropertyEditor(QTreeWidget):
         self._dataMapper.setModel(model)
         self._widgetFactory = widgetFactory
         self._nodeFactory = nodeFactory
-        self._currentGroup = None
+        self._currentNodeType = None
         for index, property in enumerate(self._allProperties()):
             item = self._createItem(property)
             self._createWidget(item)
 
     def changeSelection(self, current, prev):
         node = current.internalPointer()
-        groups = self._fetchGroups(node)
-        items = self._fetchVisibleItems(groups)
+        nodeTypes = self._fetchNodeTypes(node)
+        items = self._fetchVisibleItems(nodeTypes)
         self._setDataMapper(current, items)
 
     def _allProperties(self):
         result = []
         for type in NodeType.All():
             node = self._nodeFactory.create(type)
-            for property in node.properties():
+            for property in node.propertyMap():
                 if property not in result:
                     result.append(property)
         return result
 
-    def _fetchGroups(self, node):
-        groups = set()
-        for property in node.properties():
-            groups.add(property.group())
-        return groups
+    def _fetchNodeTypes(self, node):
+        result = set()
+        for property in node.propertyMap():
+            result.add(property.nodeType())
+        return result
 
-    def _fetchVisibleItems(self, groups):
+    def _fetchVisibleItems(self, nodeTypes):
         result = []
         for i in range(self.topLevelItemCount()):
             item = self.topLevelItem(i)
-            if self._hideGroup(item, groups):
+            if self._hideNodeType(item, nodeTypes):
                 continue
             for index in range(item.childCount()):
                 result.append(item.child(index))
         return result
 
-    def _hideGroup(self, item, groups):
-        property = item.property()
-        hide = property.group() not in groups
+    def _hideNodeType(self, item, nodeTypes):
+        nodeType = item.data(0, Qt.UserRole)
+        hide = nodeType not in nodeTypes
         item.setHidden(hide)
         return hide
 
@@ -92,22 +92,23 @@ class PropertyEditor(QTreeWidget):
         self._dataMapper.setRootIndex(parent)
         self._dataMapper.setCurrentModelIndex(current)
 
-    def _createGroupItem(self, property):
-        if self._currentGroup == property.group():
-            return self._groupItem
+    def _createNodeTypeItem(self, nodeType):
+        if self._currentNodeType == nodeType:
+            return self._nodeTypeItem
         names = NodeType.Names()
         item = PropertyEditorItem()
-        item.setText(0, names[property.group()])
-        item.setProperty(property)
+        item.setText(0, names[nodeType])
+        item.setData(0, Qt.UserRole, nodeType)
         self.addTopLevelItem(item)
         item.setExpanded(True)
-        self._currentGroup = property.group()
-        self._groupItem = item
+        self._currentNodeType = nodeType
+        self._nodeTypeItem = item
         return item
 
     def _createItem(self, property):
-        item = PropertyEditorItem(self._createGroupItem(property))
-        item.setText(0, property.name())
+        parent = self._createNodeTypeItem(property.nodeType())
+        item = PropertyEditorItem(parent)
+        item.setText(0, property.label())
         item.setProperty(property)
         return item
 

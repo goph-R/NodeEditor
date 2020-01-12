@@ -14,7 +14,6 @@ class App(QObject):
 
         QCoreApplication.setOrganizationName('Dynart')
         QCoreApplication.setApplicationName('NodeEditor')
-        self._styleContent = ''
         self._qApp = QApplication(args)
         self._qApp.setStyle(Style())
         self._mainWindow = MainWindow(self)
