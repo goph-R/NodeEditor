@@ -10,7 +10,7 @@ class Component(QObject):
         self._propertyMap = self.createPropertyMap()
         self._node = None
 
-    def setNode(self, value):  # C++: private method with friend class (NodeFactory)
+    def setNode(self, value):  # C++: private method with friend class Node
         self._node = value
 
     def init(self):
