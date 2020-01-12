@@ -26,9 +26,6 @@ class Node(QObject):
     def type(self):
         return self._type
 
-    def propertyMap(self):
-        return self._propertyMap
-
     nameProperty = Property(str, name, setName)
     typeProperty = Property(int, type)
 
@@ -52,6 +49,9 @@ class Node(QObject):
     def setPropertyColumns(self):
         for column, property in enumerate(self._propertyMap):
             property.setColumn(column)
+
+    def propertyMap(self):
+        return self._propertyMap
 
     def addChild(self, child):
         self._children.append(child)
