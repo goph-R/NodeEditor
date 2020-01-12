@@ -42,7 +42,6 @@ class Node(object):
         for component in self._components.values():
             component.init()
 
-
     def addChild(self, child):
         self._children.append(child)
 

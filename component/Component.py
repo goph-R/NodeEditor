@@ -34,7 +34,7 @@ class Component(QObject):
 
     def createPropertyMap(self):
         return [
-            ComponentProperty('Name', 'name', str),  # C++: we have to use a NodePropertyType, can't pass type as an argument
+            ComponentProperty('Name', 'name', str),  # C++: we have to use a ComponentPropertyType, can't pass type as an argument
         ]
 
     def propertyMap(self):

@@ -20,14 +20,14 @@ class MainWindow(QMainWindow):
         # model
         nodeFactory = NodeFactory()
         rootNode = nodeFactory.create(NodeType.General, 'Root')
-        # for i in range(10000):  # for testing
-        childNode0 = nodeFactory.create(NodeType.General, 'RightPirateLeg', rootNode)
-        childNode1 = nodeFactory.create(NodeType.Sphere, 'RightPirateLeg_END', childNode0)
-        childNode2 = nodeFactory.create(NodeType.General, 'LeftFemur', rootNode)
-        childNode3 = nodeFactory.create(NodeType.Box, 'LeftTibia', childNode2)
-        childNode4 = nodeFactory.create(NodeType.Box, 'LeftFoot', childNode3)
-        childNode5 = nodeFactory.create(NodeType.Box, 'LeftFoot_END', childNode4)
-        self._model = SceneGraphModel(rootNode)
+        for i in range(10000):  # for testing
+            childNode0 = nodeFactory.create(NodeType.General, 'RightPirateLeg', rootNode)
+            childNode1 = nodeFactory.create(NodeType.Sphere, 'RightPirateLeg_END', childNode0)
+            childNode2 = nodeFactory.create(NodeType.General, 'LeftFemur', rootNode)
+            childNode3 = nodeFactory.create(NodeType.Box, 'LeftTibia', childNode2)
+            childNode4 = nodeFactory.create(NodeType.Box, 'LeftFoot', childNode3)
+            childNode5 = nodeFactory.create(NodeType.Box, 'LeftFoot_END', childNode4)
+            self._model = SceneGraphModel(rootNode)
 
         # scene graph view
         self._treeView = QTreeView()
