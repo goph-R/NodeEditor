@@ -24,7 +24,6 @@ class PropertyEditor(QTreeWidget):
         super(PropertyEditor, self).__init__()
         self._dataMapper = QDataWidgetMapper()
         self._currentComponentType = None
-        self._nodeTypeItem = None
         self._widgetFactory = None
         self._nodeFactory = None
         # setup ui
@@ -38,7 +37,6 @@ class PropertyEditor(QTreeWidget):
         self._dataMapper.setModel(model)
         self._widgetFactory = widgetFactory
         self._nodeFactory = nodeFactory
-        self._currentComponentType = None
         self._createAllItems()
 
     def _createAllItems(self):
