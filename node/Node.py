@@ -32,12 +32,16 @@ class Node(object):
     def init(self):
         column = 0
         for component in self._components.values():
+            component.setNode(self)
             properties = component.propertyMap()
             self._propertyMap.extend(properties)
             for property in properties:
                 property.setColumn(column)
                 self._componentMap.append(component)
                 column += 1
+        for component in self._components.values():
+            component.init()
+
 
     def addChild(self, child):
         self._children.append(child)

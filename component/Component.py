@@ -11,6 +11,15 @@ class Component(QObject):
         self._type = ComponentType.General
         self._name = ''
         self._propertyMap = self.createPropertyMap()
+        self._node = None
+
+    def setNode(self, value):
+        self._node = value
+
+    def init(self):
+        # in case it's needed, it will be called, when the node contains all of the components,
+        # and the component has the _node value
+        pass
 
     def type(self):
         return self._type
