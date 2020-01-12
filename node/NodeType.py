@@ -8,5 +8,6 @@ class NodeType(object):  # C++: NodeType Q_ENUM
     def All():
         return [NodeType.General, NodeType.Box, NodeType.Sphere]
 
-    def Names(self):
+    @staticmethod
+    def Names():
         return ['General', 'Box', 'Sphere']

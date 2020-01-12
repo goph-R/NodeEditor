@@ -42,6 +42,12 @@ class PropertyEditor(QTreeWidget):
     def _createAllItems(self):
         for componentType, properties in self._allProperties().items():
             topItem = self._createComponentItem(componentType)
+            if componentType == ComponentType.General:
+                self._nodeTypeItem = PropertyEditorItem(topItem)
+                self._nodeTypeItem.setText(0, 'Type')
+                font = self._nodeTypeItem.font(1)  # don't ask, this is how it will be the same size as in the editors
+                font.setPointSize(font.pointSize())
+                self._nodeTypeItem.setFont(1, font)
             for property in properties:
                 item = PropertyEditorItem(topItem)
                 item.setText(0, property.label())
@@ -63,6 +69,8 @@ class PropertyEditor(QTreeWidget):
 
     def _fetchVisibleItems(self, node):
         result = []
+        names = NodeType.Names()
+        self._nodeTypeItem.setText(1, names[node.type()])
         for i in range(self.topLevelItemCount()):
             componentItem = self.topLevelItem(i)
             componentType = componentItem.data(0, Qt.UserRole)
@@ -72,7 +80,8 @@ class PropertyEditor(QTreeWidget):
                 continue
             componentItem.setHidden(False)
             for column, property in enumerate(component.propertyMap()):
-                item = componentItem.child(column)
+                offset = 1 if componentType == ComponentType.General else 0  # the first item of General is Type
+                item = componentItem.child(column + offset)
                 item.setProperty(property)
                 result.append(item)
         return result
@@ -81,6 +90,8 @@ class PropertyEditor(QTreeWidget):
         self._dataMapper.clearMapping()
         for item in items:
             property = item.property()
+            if not property:  # General/Type
+                continue
             widget = self.itemWidget(item, 1)
             self._widgetFactory.setReadOnly(current, property, widget)
             mapToProperty = self._widgetFactory.mapToProperty(property.type())
