@@ -13,7 +13,7 @@
 import os
 
 from PySide2.QtGui import QPalette, QColor, Qt
-from PySide2.QtWidgets import QProxyStyle, QStyleFactory, QApplication
+from PySide2.QtWidgets import QProxyStyle, QStyleFactory
 
 
 class Style(QProxyStyle):
