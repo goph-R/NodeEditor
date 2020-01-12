@@ -1,15 +1,15 @@
 from PySide2.QtCore import Property
 
-from node.NodeProperty import NodeProperty
-from node.Translate import Translate
-from node.NodeType import NodeType
+from component.Component import Component
+from component.ComponentProperty import ComponentProperty
+from component.ComponentType import ComponentType
 
 
-class Box(Translate):
+class Box(Component):
 
-    def __init__(self, parent):
-        super(Box, self).__init__(parent)
-        self._type = NodeType.Box
+    def __init__(self):
+        super(Box, self).__init__()
+        self._type = ComponentType.Box
         self._width = 1
         self._height = 1
         self._depth = 1
@@ -37,10 +37,8 @@ class Box(Translate):
     depthProperty = Property(float, depth, setDepth)
 
     def createPropertyMap(self):
-        base = super(Box, self).createPropertyMap()
-        result = self.extendPropertyMap(base, NodeType.Box, [
-            NodeProperty('Width', 'width', float),
-            NodeProperty('Height', 'height', float),
-            NodeProperty('Depth', 'depth', float)
-        ])
-        return result
+        return [
+            ComponentProperty('Width', 'width', float),
+            ComponentProperty('Height', 'height', float),
+            ComponentProperty('Depth', 'depth', float)
+        ]

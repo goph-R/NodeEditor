@@ -1,6 +1,6 @@
 from PySide2.QtWidgets import QLineEdit, QDoubleSpinBox, QComboBox
 
-from node.NodeType import NodeType
+from component.ComponentType import ComponentType
 
 
 class PropertyWidgetFactory(object):
@@ -12,9 +12,9 @@ class PropertyWidgetFactory(object):
             result = QLineEdit()
         elif type == float:
             result = QDoubleSpinBox()
-        elif type == NodeType:
+        elif type == ComponentType:
             result = QComboBox()
-            result.addItems(NodeType.Names())
+            result.addItems(ComponentType.Names())
         return result
 
     def setReadOnly(self, index, property, widget):
@@ -23,11 +23,11 @@ class PropertyWidgetFactory(object):
         type = property.type()
         if type == str or type == float:
             widget.setReadOnly(readOnly)
-        elif type == NodeType:
+        elif type == ComponentType:
             widget.setDisabled(readOnly)
 
     def mapToProperty(self, type):
         result = None
-        if type == NodeType:
+        if type == ComponentType:
             result = 'currentIndex'
         return result

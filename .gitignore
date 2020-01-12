@@ -1,5 +1,4 @@
 .idea/*
 __pycache__/*
 node/__pycache__/*
-property/__pycache__/*
-
+component/__pycache__/*

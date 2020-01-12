@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
 
         # property editor
         propertyEditor = PropertyEditor()
-        propertyEditor.setup(self._model, PropertyWidgetFactory(), nodeFactory)
+        propertyEditor.init(self._model, PropertyWidgetFactory(), nodeFactory)
 
         dockWidget = QDockWidget()
         dockWidget.setWidget(propertyEditor)

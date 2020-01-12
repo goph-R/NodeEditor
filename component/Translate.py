@@ -1,14 +1,15 @@
 from PySide2.QtCore import Property
 
-from node.Node import Node
-from node.NodeProperty import NodeProperty
-from node.NodeType import NodeType
+from component.Component import Component
+from component.ComponentProperty import ComponentProperty
+from component.ComponentType import ComponentType
 
 
-class Translate(Node):
+class Translate(Component):
 
-    def __init__(self, parent):
-        super(Translate, self).__init__(parent)
+    def __init__(self):
+        super(Translate, self).__init__()
+        self._type = ComponentType.Translate
         self._x = 0
         self._y = 0
         self._z = 0
@@ -36,10 +37,8 @@ class Translate(Node):
     zProperty = Property(float, z, setZ)
 
     def createPropertyMap(self):
-        base = super(Translate, self).createPropertyMap()
-        result = self.extendPropertyMap(base, NodeType.Translate, [
-            NodeProperty('X', 'x', float),
-            NodeProperty('Y', 'y', float),
-            NodeProperty('Z', 'z', float)
-        ])
-        return result
+        return [
+            ComponentProperty('X', 'x', float),
+            ComponentProperty('Y', 'y', float),
+            ComponentProperty('Z', 'z', float)
+        ]

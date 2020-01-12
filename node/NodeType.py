@@ -1,14 +1,12 @@
-class NodeType(object):  # C++: Q_ENUM
+class NodeType(object):  # C++: NodeType Q_ENUM
 
     General = 0
-    Translate = 1
-    Box = 2
-    Sphere = 3
+    Box = 1
+    Sphere = 2
 
     @staticmethod
     def All():
-        return [NodeType.General, NodeType.Translate, NodeType.Box, NodeType.Sphere]
+        return [NodeType.General, NodeType.Box, NodeType.Sphere]
 
-    @staticmethod
-    def Names():
-        return ['General', 'Translate', 'Box', 'Sphere']
+    def Names(self):
+        return ['General', 'Box', 'Sphere']

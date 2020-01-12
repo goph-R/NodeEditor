@@ -1,6 +1,7 @@
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QTreeWidget, QTreeWidgetItem, QDataWidgetMapper, QAbstractItemView
 
+from component.ComponentType import ComponentType
 from node.NodeType import NodeType
 
 
@@ -21,62 +22,62 @@ class PropertyEditor(QTreeWidget):
 
     def __init__(self):
         super(PropertyEditor, self).__init__()
+        self._dataMapper = QDataWidgetMapper()
+        self._currentComponentType = None
+        self._nodeTypeItem = None
+        self._widgetFactory = None
+        self._nodeFactory = None
+        # setup ui
         self.setColumnCount(2)
         self.setHeaderLabels(['Name', 'Value'])
         self.setSelectionMode(QAbstractItemView.NoSelection)
         self.setAlternatingRowColors(True)
         self.setFocusPolicy(Qt.NoFocus)
-        self._dataMapper = QDataWidgetMapper()
-        self._currentNodeType = None
-        self._nodeTypeItem = None
-        self._widgetFactory = None
-        self._nodeFactory = None
 
-    def setup(self, model, widgetFactory, nodeFactory):
+    def init(self, model, widgetFactory, nodeFactory):
         self._dataMapper.setModel(model)
         self._widgetFactory = widgetFactory
         self._nodeFactory = nodeFactory
-        self._currentNodeType = None
-        for index, property in enumerate(self._allProperties()):
-            item = self._createItem(property)
-            self._createWidget(item)
+        self._currentComponentType = None
+        self._createAllItems()
+
+    def _createAllItems(self):
+        for componentType, properties in self._allProperties().items():
+            topItem = self._createComponentItem(componentType)
+            for property in properties:
+                item = PropertyEditorItem(topItem)
+                item.setText(0, property.label())
+                widget = self._widgetFactory.create(property)
+                self.setItemWidget(item, 1, widget)
+
+    def _allProperties(self):
+        result = {}
+        for type in NodeType.All():
+            node = self._nodeFactory.create(type)
+            for component in node.components().values():
+                result[component.type()] = component.propertyMap()
+        return result
 
     def changeSelection(self, current, prev):
         node = current.internalPointer()
-        nodeTypes = self._fetchNodeTypes(node)
-        items = self._fetchVisibleItems(nodeTypes)
-        self._setDataMapper(current, items)
+        visibleItems = self._fetchVisibleItems(node)
+        self._setDataMapper(current, visibleItems)
 
-    def _allProperties(self):
-        result = []
-        for type in NodeType.All():
-            node = self._nodeFactory.create(type)
-            for property in node.propertyMap():
-                if property not in result:
-                    result.append(property)
-        return result
-
-    def _fetchNodeTypes(self, node):
-        result = set()
-        for property in node.propertyMap():
-            result.add(property.nodeType())
-        return result
-
-    def _fetchVisibleItems(self, nodeTypes):
+    def _fetchVisibleItems(self, node):
         result = []
         for i in range(self.topLevelItemCount()):
-            item = self.topLevelItem(i)
-            if self._hideNodeType(item, nodeTypes):
+            componentItem = self.topLevelItem(i)
+            componentType = componentItem.data(0, Qt.UserRole)
+            component = node.component(componentType)
+            if component is None:
+                componentItem.setHidden(True)
                 continue
-            for index in range(item.childCount()):
-                result.append(item.child(index))
+            componentItem.setHidden(False)
+            for column, property in enumerate(component.propertyMap()):
+                item = componentItem.child(column)
+                item.setProperty(property)
+                result.append(item)
         return result
-
-    def _hideNodeType(self, item, nodeTypes):
-        nodeType = item.data(0, Qt.UserRole)
-        hide = nodeType not in nodeTypes
-        item.setHidden(hide)
-        return hide
 
     def _setDataMapper(self, current, items):
         self._dataMapper.clearMapping()
@@ -93,29 +94,11 @@ class PropertyEditor(QTreeWidget):
         self._dataMapper.setRootIndex(parent)
         self._dataMapper.setCurrentModelIndex(current)
 
-    def _createNodeTypeItem(self, nodeType):
-        if self._currentNodeType == nodeType:
-            return self._nodeTypeItem
-        names = NodeType.Names()
+    def _createComponentItem(self, type):
+        names = ComponentType.Names()
         item = PropertyEditorItem()
-        item.setText(0, names[nodeType])
-        item.setData(0, Qt.UserRole, nodeType)
+        item.setText(0, names[type])
+        item.setData(0, Qt.UserRole, type)
         self.addTopLevelItem(item)
         item.setExpanded(True)
-        self._currentNodeType = nodeType
-        self._nodeTypeItem = item
         return item
-
-    def _createItem(self, property):
-        parent = self._createNodeTypeItem(property.nodeType())
-        item = PropertyEditorItem(parent)
-        item.setText(0, property.label())
-        item.setProperty(property)
-        return item
-
-    def _createWidget(self, item):
-        widget = self._widgetFactory.create(item.property())
-        self.setItemWidget(item, 1, widget)
-
-
-

@@ -1,59 +1,43 @@
-from PySide2.QtCore import QObject, Property
+class Node(object):
 
-from node.NodeProperty import NodeProperty
-from node.NodeType import NodeType
-
-
-class Node(QObject):  # need to extend QObject because of the properties
-
-    def __init__(self, parent):
-        super(Node, self).__init__(parent)
-        self._children = []  # C++: QList<Node*>
+    def __init__(self, type, parent):
+        super(Node, self).__init__()
+        self._type = type
         self._parent = parent
-        self._name = ''
-        self._type = NodeType.General
-        self._propertyMap = self.createPropertyMap()  # C++: QList<NodeProperty*>
-        self.setPropertyColumns()
+        self._children = []  # C++: QList<Node*>
+        self._components = {}  # C++: QHash<ComponentType, Component*>
+        self._propertyMap = []  # C++: QList<NodeProperty*>
+        self._componentMap = []  # C++: QList<Component*>
         if parent is not None:
             parent.addChild(self)
-
-    def name(self):
-        return self._name
-
-    def setName(self, value):
-        self._name = value
 
     def type(self):
         return self._type
 
-    nameProperty = Property(str, name, setName)  # C++: Q_PROPERTY(QString name READ name WRITE setName)
-    typeProperty = Property(int, type)           # C++: Q_PROPERTY(int type READ type WRITE setType)
+    def addComponent(self, component):
+        self._components[component.type()] = component
 
-    def createPropertyMap(self):
-        base = [
-            NodeProperty('Name', 'name', str),  # C++: we have to use a NodePropertyType, can't pass type as an argument
-            NodeProperty('Type', 'type', NodeType, True)
-        ]
-        self.setNodeType(NodeType.General, base)
-        return base
+    def hasComponent(self, type):
+        return type in self._components
 
-    def extendPropertyMap(self, base, nodeType, result):
-        self.setNodeType(nodeType, result)
-        base.extend(result)  # C++: QList::append(QList)
-        return base
+    def component(self, type):
+        return self._components[type] if self.hasComponent(type) else None
 
-    def setNodeType(self, nodeType, properties):
-        for column, property in enumerate(properties):  # C++: for (int column = 0; column < properties.count(); i++) {
-            property.setNodeType(nodeType)              #          auto property = properties.at(column);
-                                                        #          property->setNodeType(nodeType);
-                                                        #      }
-
-    def setPropertyColumns(self):
-        for column, property in enumerate(self._propertyMap):
-            property.setColumn(column)
+    def components(self):
+        return self._components
 
     def propertyMap(self):
         return self._propertyMap
+
+    def init(self):
+        column = 0
+        for component in self._components.values():
+            properties = component.propertyMap()
+            self._propertyMap.extend(properties)
+            for property in properties:
+                property.setColumn(column)
+                self._componentMap.append(component)
+                column += 1
 
     def addChild(self, child):
         self._children.append(child)
@@ -82,8 +66,10 @@ class Node(QObject):  # need to extend QObject because of the properties
 
     def data(self, column):
         name = self._propertyMap[column].name()
-        return self.property(name)
+        component = self._componentMap[column]
+        return component.property(name)
 
-    def setData(self, column, value):
+    def setData(self, column, value):  # C++: the value is a QVariant
         name = self._propertyMap[column].name()
-        self.setProperty(name, value)
+        component = self._componentMap[column]
+        component.setProperty(name, value)

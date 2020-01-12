@@ -1,23 +1,25 @@
-from node.NodeType import NodeType
+from component.Box import Box
+from component.Component import Component
+from component.Sphere import Sphere
+from component.Translate import Translate
 from node.Node import Node
-from node.Box import Box
-from node.Sphere import Sphere
-from node.Translate import Translate
+from node.NodeType import NodeType
 
 
 class NodeFactory(object):
 
     def create(self, type, name='', parent=None):
-        result = None
-        if type == NodeType.General:
-            result = Node(parent)
-        elif type == NodeType.Translate:
-            result = Translate(parent)
+        general = Component()
+        general.setName(name)
+        result = Node(type, parent)
+        result.addComponent(general)
+        if type == NodeType.Sphere:
+            result.addComponent(Translate())
+            result.addComponent(Sphere())
         elif type == NodeType.Box:
-            result = Box(parent)
-        elif type == NodeType.Sphere:
-            result = Sphere(parent)
-        result.setName(name)
+            result.addComponent(Translate())
+            result.addComponent(Box())
+        result.init()
         return result
 
 
