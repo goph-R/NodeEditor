@@ -1,9 +1,8 @@
-from PySide2.QtCore import Qt, QSettings, QModelIndex
-from PySide2.QtWidgets import QDockWidget, QMainWindow, QTreeView, QPushButton, QWidget
+from PySide2.QtCore import Qt
+from PySide2.QtWidgets import QDockWidget, QMainWindow, QTreeView, QPushButton
 
 from node.NodeFactory import NodeFactory
 from node.NodeType import NodeType
-from node.Node import Node
 
 from PropertyEditor import PropertyEditor
 from PropertyWidgetFactory import PropertyWidgetFactory
@@ -19,10 +18,10 @@ class MainWindow(QMainWindow):
 
         # model
         nodeFactory = NodeFactory()
-        rootNode = nodeFactory.create(NodeType.Box, 'Hips')
-        childNode0 = nodeFactory.create(NodeType.Sphere, 'RightPirateLeg', rootNode)
-        childNode1 = nodeFactory.create(NodeType.Box, 'RightPirateLeg_END', childNode0)
-        childNode2 = nodeFactory.create(NodeType.Box, 'LeftFemur', rootNode)
+        rootNode = nodeFactory.create(NodeType.General, 'Root')
+        childNode0 = nodeFactory.create(NodeType.General, 'RightPirateLeg', rootNode)
+        childNode1 = nodeFactory.create(NodeType.Sphere, 'RightPirateLeg_END', childNode0)
+        childNode2 = nodeFactory.create(NodeType.General, 'LeftFemur', rootNode)
         childNode3 = nodeFactory.create(NodeType.Box, 'LeftTibia', childNode2)
         childNode4 = nodeFactory.create(NodeType.Box, 'LeftFoot', childNode3)
         childNode5 = nodeFactory.create(NodeType.Box, 'LeftFoot_END', childNode4)

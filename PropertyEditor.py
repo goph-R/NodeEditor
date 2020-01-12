@@ -21,16 +21,16 @@ class PropertyEditor(QTreeWidget):
 
     def __init__(self):
         super(PropertyEditor, self).__init__()
-        self._currentNodeType = None
-        self._nodeTypeItem = None
-        self._dataMapper = QDataWidgetMapper()
-        self._widgetFactory = None
-        self._nodeFactory = None
         self.setColumnCount(2)
         self.setHeaderLabels(['Name', 'Value'])
         self.setSelectionMode(QAbstractItemView.NoSelection)
         self.setAlternatingRowColors(True)
         self.setFocusPolicy(Qt.NoFocus)
+        self._dataMapper = QDataWidgetMapper()
+        self._currentNodeType = None
+        self._nodeTypeItem = None
+        self._widgetFactory = None
+        self._nodeFactory = None
 
     def setup(self, model, widgetFactory, nodeFactory):
         self._dataMapper.setModel(model)
@@ -83,6 +83,7 @@ class PropertyEditor(QTreeWidget):
         for item in items:
             property = item.property()
             widget = self.itemWidget(item, 1)
+            self._widgetFactory.setReadOnly(current, property, widget)
             mapToProperty = self._widgetFactory.mapToProperty(property.type())
             if mapToProperty:
                 self._dataMapper.addMapping(widget, property.column(), bytes(mapToProperty, 'ascii'))

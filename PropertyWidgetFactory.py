@@ -8,18 +8,23 @@ class PropertyWidgetFactory(object):
     def create(self, property):
         result = None
         type = property.type()
-        readOnly = property.readOnly()
         if type == str:
             result = QLineEdit()
-            result.setReadOnly(readOnly)
         elif type == float:
             result = QDoubleSpinBox()
-            result.setReadOnly(readOnly)
         elif type == NodeType:
             result = QComboBox()
             result.addItems(NodeType.Names())
-            result.setDisabled(readOnly)
         return result
+
+    def setReadOnly(self, index, property, widget):
+        parent = index.parent()
+        readOnly = property.readOnly() or not parent.isValid() # the top level nodes are read only
+        type = property.type()
+        if type == str or type == float:
+            widget.setReadOnly(readOnly)
+        elif type == NodeType:
+            widget.setDisabled(readOnly)
 
     def mapToProperty(self, type):
         result = None
