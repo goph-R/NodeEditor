@@ -1,7 +1,6 @@
-from PySide2.QtCore import Qt, QSettings
+from PySide2.QtCore import Qt, QSettings, QModelIndex
 from PySide2.QtWidgets import QDockWidget, QMainWindow, QTreeView, QPushButton, QWidget
 
-from node.Box import Box
 from node.NodeFactory import NodeFactory
 from node.NodeType import NodeType
 from node.Node import Node
@@ -16,6 +15,7 @@ class MainWindow(QMainWindow):
     def __init__(self, app):
         super(MainWindow, self).__init__()
         self._app = app
+        self._selectedIndex = None
 
         # model
         nodeFactory = NodeFactory()
@@ -68,19 +68,29 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(button)
 
         # selection change event
-        self._treeView.selectionModel().currentChanged.connect(propertyEditor.changeSelection)
+        selectionModel = self._treeView.selectionModel()
+        selectionModel.currentChanged.connect(propertyEditor.changeSelection)
 
         # click event
         button.clicked.connect(self.buttonClicked)
 
-    def buttonClicked(self):
-        indices = self._treeView.selectionModel().selectedIndexes()
-        if len(indices) != 1:
-            return
-        index = indices[0]
-        node = index.internalPointer()
-        node.setName('CLICKED')
-        self._model.dataChanged.emit(index, index)
+    def selectedNode(self):
+        indices = self._treeView.selectedIndexes()
+        result = None
+        if len(indices) == 1:
+            self._selectedIndex = indices[0]
+            result = self._selectedIndex.internalPointer()
+        return result
+
+    def commitChange(self):
+        self._model.dataChanged.emit(self._selectedIndex, self._selectedIndex)
 
     def closeEvent(self, event):
         self._app.exit()
+
+    # data change example
+    def buttonClicked(self):
+        node = self.selectedNode()
+        if node:
+            node.setName('CLICKED')
+            self.commitChange()
