@@ -1,4 +1,4 @@
-class NodeType(object):
+class NodeType(object):  # C++: Q_ENUM
 
     General = 0
     Translate = 1

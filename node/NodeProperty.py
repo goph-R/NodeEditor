@@ -2,8 +2,8 @@ class NodeProperty(object):
 
     def __init__(self, label, name, type, readOnly=False):
         self._label = label
-        self._name = name + 'Property'
-        self._type = type
+        self._name = name + 'Property'  # C++: 'Property' must be removed, this is only because of Python
+        self._type = type  # C++: use a NodePropertyType Q_ENUM
         self._readOnly = readOnly
         self._nodeType = None
         self._column = None
