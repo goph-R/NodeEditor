@@ -13,7 +13,7 @@ class App(QObject):
         super(App, self).__init__()
 
         QCoreApplication.setOrganizationName('Dynart')
-        QCoreApplication.setApplicationName('ModelTest')
+        QCoreApplication.setApplicationName('NodeEditor')
         self._styleContent = ''
         self._qApp = QApplication(args)
         self._qApp.setStyle(Style())
