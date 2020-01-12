@@ -4,15 +4,15 @@ from node.NodeProperty import NodeProperty
 from node.NodeType import NodeType
 
 
-class Node(QObject):
+class Node(QObject):  # need to extend QObject because of the properties
 
     def __init__(self, parent):
         super(Node, self).__init__(parent)
-        self._children = []
+        self._children = []  # C++: QList<Node*>
         self._parent = parent
         self._name = ''
         self._type = NodeType.General
-        self._propertyMap = self.createPropertyMap()
+        self._propertyMap = self.createPropertyMap()  # C++: QList<NodeProperty*>
         self.setPropertyColumns()
         if parent is not None:
             parent.addChild(self)
@@ -26,12 +26,12 @@ class Node(QObject):
     def type(self):
         return self._type
 
-    nameProperty = Property(str, name, setName)
-    typeProperty = Property(int, type)
+    nameProperty = Property(str, name, setName)  # C++: Q_PROPERTY(QString name READ name WRITE setName)
+    typeProperty = Property(int, type)           # C++: Q_PROPERTY(int type READ type WRITE setType)
 
     def createPropertyMap(self):
         base = [
-            NodeProperty('Name', 'name', str),
+            NodeProperty('Name', 'name', str),  # C++: we have to use a NodePropertyType, can't pass type as an argument
             NodeProperty('Type', 'type', NodeType, True)
         ]
         self.setNodeType(NodeType.General, base)
@@ -39,12 +39,14 @@ class Node(QObject):
 
     def extendPropertyMap(self, base, nodeType, result):
         self.setNodeType(nodeType, result)
-        base.extend(result)
+        base.extend(result)  # C++: QList::append(QList)
         return base
 
     def setNodeType(self, nodeType, properties):
-        for column, property in enumerate(properties):
-            property.setNodeType(nodeType)
+        for column, property in enumerate(properties):  # C++: for (int column = 0; column < properties.count(); i++) {
+            property.setNodeType(nodeType)              #          auto property = properties.at(column);
+                                                        #          property->setNodeType(nodeType);
+                                                        #      }
 
     def setPropertyColumns(self):
         for column, property in enumerate(self._propertyMap):
