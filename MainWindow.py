@@ -19,6 +19,7 @@ class MainWindow(QMainWindow):
         # model
         nodeFactory = NodeFactory()
         rootNode = nodeFactory.create(NodeType.General, 'Root')
+        # for i in range(10000):  # for testing
         childNode0 = nodeFactory.create(NodeType.General, 'RightPirateLeg', rootNode)
         childNode1 = nodeFactory.create(NodeType.Sphere, 'RightPirateLeg_END', childNode0)
         childNode2 = nodeFactory.create(NodeType.General, 'LeftFemur', rootNode)

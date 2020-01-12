@@ -14,27 +14,27 @@ class Box(Translate):
         self._height = 1
         self._depth = 1
 
-    def getWidth(self):
+    def width(self):
         return self._width
 
     def setWidth(self, value):
         self._width = value
 
-    def getHeight(self):
+    def height(self):
         return self._height
 
     def setHeight(self, value):
         self._height = value
 
-    def getDepth(self):
+    def depth(self):
         return self._depth
 
     def setDepth(self, value):
         self._depth = value
 
-    width = Property(float, getWidth, setHeight)
-    height = Property(float, getHeight, setHeight)
-    depth = Property(float, getDepth, setDepth)
+    widthProperty = Property(float, width, setHeight)
+    heightProperty = Property(float, height, setHeight)
+    depthProperty = Property(float, depth, setDepth)
 
     def createPropertyMap(self):
         base = super(Box, self).createPropertyMap()
