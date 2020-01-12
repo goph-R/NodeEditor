@@ -1,6 +1,7 @@
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QDockWidget, QMainWindow, QTreeView, QPushButton
 
+from component.ComponentType import ComponentType
 from node.NodeFactory import NodeFactory
 from node.NodeType import NodeType
 
@@ -91,6 +92,8 @@ class MainWindow(QMainWindow):
     # data change example
     def buttonClicked(self):
         node = self.selectedNode()
-        if node:
-            node.setName('CLICKED')
-            self.commitChange()
+        if not node:
+            return
+        general = node.component(ComponentType.General)
+        general.setName('CLICKED')
+        self.commitChange()
