@@ -8,6 +8,7 @@ from node.NodeType import NodeType
 from PropertyEditor import PropertyEditor
 from PropertyWidgetFactory import PropertyWidgetFactory
 from SceneGraphModel import SceneGraphModel
+from scene.SceneView import SceneView
 
 
 class MainWindow(QMainWindow):
@@ -56,7 +57,7 @@ class MainWindow(QMainWindow):
         menuBar = self.menuBar()
         menu = menuBar.addMenu('&File')
         exitAction = menu.addAction('E&xit')
-        exitAction.triggered.connect(self._app.exit)
+        exitAction.triggered.connect(self.close)
         menu.addAction(exitAction)
         menu = menuBar.addMenu('&Windows')
         menu.addAction(sceneGraphToggleAction)
@@ -64,15 +65,17 @@ class MainWindow(QMainWindow):
         menuBar.addMenu(menu)
 
         # central widget
-        button = QPushButton()
-        self.setCentralWidget(button)
+        #button = QPushButton()
+        self._sceneView = SceneView()
+        self._container = self.createWindowContainer(self._sceneView)
+        self.setCentralWidget(self._container)
 
         # selection change event
         selectionModel = self._treeView.selectionModel()
         selectionModel.currentChanged.connect(propertyEditor.changeSelection)
 
         # click event
-        button.clicked.connect(self.buttonClicked)
+        #button.clicked.connect(self.buttonClicked)
 
     def selectedNode(self):
         indices = self._treeView.selectedIndexes()

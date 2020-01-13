@@ -2,3 +2,4 @@
 __pycache__/*
 node/__pycache__/*
 component/__pycache__/*
+scene/*
