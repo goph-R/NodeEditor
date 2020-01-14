@@ -106,13 +106,16 @@ class PropertyEditor(QTreeWidget):
 
     def _setMapping(self, current, items):
         self._dataMapper.clearMapping()
+        fields = []
+        for item in items:
+            fields.append(self._mapField(current, item))
         parent = current.parent()
         self._dataMapper.setRootIndex(parent)
-        for item in items:
-            self._mapWidget(current, item)
         self._dataMapper.setCurrentModelIndex(current)
+        for field in fields:
+            field.changed.connect(self._dataMapper.submit)
 
-    def _mapWidget(self, current, item):
+    def _mapField(self, current, item):
         property = item.property()
         if not property:  # General/Type doesn't have a property
             return
@@ -121,7 +124,8 @@ class PropertyEditor(QTreeWidget):
         readOnly = property.readOnly() or not parent.isValid()  # the top level nodes are read only
         field.setReadOnly(readOnly)
         self._dataMapper.addMapping(field, property.column(), b'valueProperty')
-        field.changed.connect(self._dataMapper.submit)
+        return field
+
 
 
 
