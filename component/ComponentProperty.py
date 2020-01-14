@@ -1,6 +1,6 @@
 class ComponentProperty(object):
 
-    def __init__(self, label, name, type, own=False, readOnly=False, min=-100000, max=100000):
+    def __init__(self, label, name, type, own=False, readOnly=False, min=-100000, max=100000, step=1):
         self._name = name
         self._own = own
         self._label = label
@@ -9,6 +9,7 @@ class ComponentProperty(object):
         self._min = min
         self._max = max
         self._column = None
+        self._step = step
 
     def own(self):
         return self._own
@@ -36,3 +37,6 @@ class ComponentProperty(object):
 
     def max(self):
         return self._max
+
+    def step(self):
+        return self._step

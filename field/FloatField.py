@@ -12,6 +12,7 @@ class FloatField(Field):
         self._widget.valueChanged.connect(self.emitChanged)
         self._widget.setMinimum(property.min())
         self._widget.setMaximum(property.max())
+        self._widget.setSingleStep(property.step())
 
     def value(self):
         return self._widget.value()

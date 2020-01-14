@@ -31,6 +31,6 @@ class Transform(Component):
     def createPropertyMap(self):
         return [
             ComponentProperty('Translation', 'translation', QVector3D),
-            ComponentProperty('Rotation', 'eulerRotationProperty', QVector3D, True),
-            ComponentProperty('Scale', 'scale3D', QVector3D, min=0)
+            ComponentProperty('Rotation', 'eulerRotationProperty', QVector3D, True, step=10),
+            ComponentProperty('Scale', 'scale3D', QVector3D, min=0, step=0.1)
         ]

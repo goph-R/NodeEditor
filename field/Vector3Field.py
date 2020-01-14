@@ -19,6 +19,7 @@ class Vector3Field(Field):
             self._widgets[i].valueChanged.connect(self.emitChanged)
             self._widgets[i].setMinimum(property.min())
             self._widgets[i].setMaximum(property.max())
+            self._widgets[i].setSingleStep(property.step())
             l.addWidget(self._widgets[i])
 
     def value(self):
