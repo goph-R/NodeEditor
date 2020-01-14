@@ -23,10 +23,16 @@ class MainWindow(QMainWindow):
         rootNode = nodeFactory.create(NodeType.General, 'Root')
         # for i in range(10000):  # for testing
         childNode0 = nodeFactory.create(NodeType.General, 'RightPirateLeg', rootNode)
-        childNode1 = nodeFactory.create(NodeType.Sphere, 'RightPirateLeg_END', childNode0)
+        childNode1 = nodeFactory.create(NodeType.General, 'RightPirateLeg_END', childNode0)
         childNode2 = nodeFactory.create(NodeType.General, 'LeftFemur', rootNode)
-        # childNode3 = nodeFactory.create(NodeType.Box, 'LeftTibia', childNode2)
-        # childNode4 = nodeFactory.create(NodeType.Box, 'LeftFoot', childNode3)
+        childNode3 = nodeFactory.create(NodeType.Sphere, 'LeftTibia', childNode2)
+        childNode4 = nodeFactory.create(NodeType.Sphere, 'LeftFoot', childNode3)
+        transform = childNode4.component(ComponentType.Transform)
+        qTransform = transform.component()
+        translation = qTransform.translation()
+        translation.setX(5)
+        qTransform.setTranslation(translation)
+
         # childNode5 = nodeFactory.create(NodeType.Box, 'LeftFoot_END', childNode4)
         self._model = SceneGraphModel(rootNode)
 
