@@ -12,4 +12,4 @@ class ComponentType(object):  # C++: Q_ENUM
 
     @staticmethod
     def Names():
-        return ['General', 'Translate', 'Box', 'Sphere', 'PhongMaterial']
+        return ['General', 'Transform', 'Box', 'Sphere', 'PhongMaterial']

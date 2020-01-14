@@ -3,10 +3,14 @@ from PySide2.Qt3DCore import (Qt3DCore)
 
 class Node(object):
 
+    Id = 0
+
     def __init__(self, type, parent):
         super(Node, self).__init__()
         parentEntity = parent.entity() if parent else None
         self._entity = Qt3DCore.QEntity(parentEntity)
+        self._id = Node.Id
+        Node.Id += 1
         self._type = type
         self._parent = parent
         self._children = []  # C++: QList<Node*>
@@ -15,6 +19,9 @@ class Node(object):
         self._componentMap = []  # C++: QList<Component*>
         if parent is not None:
             parent.addChild(self)
+
+    def id(self):
+        return self._id
 
     def entity(self):
         return self._entity
@@ -83,7 +90,6 @@ class Node(object):
         return component.property(name)
 
     def setData(self, column, value):  # C++: the value is a QVariant
-        print(len(self._propertyMap))
         name = self._propertyMap[column].name()
         component = self._componentMap[column]
         component.setProperty(name, value)

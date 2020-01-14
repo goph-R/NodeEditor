@@ -106,10 +106,10 @@ class PropertyEditor(QTreeWidget):
 
     def _setMapping(self, current, items):
         self._dataMapper.clearMapping()
-        for item in items:
-            self._mapWidget(current, item)
         parent = current.parent()
         self._dataMapper.setRootIndex(parent)
+        for item in items:
+            self._mapWidget(current, item)
         self._dataMapper.setCurrentModelIndex(current)
 
     def _mapWidget(self, current, item):

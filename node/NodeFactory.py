@@ -11,16 +11,16 @@ class NodeFactory(object):
 
     def create(self, type, name='', parent=None):
         result = Node(type, parent)
+
         general = General()
         general.setName(name)
         result.addComponent(general)
+
         if type == NodeType.Sphere:
             result.addComponent(Transform())
             result.addComponent(Sphere())
             result.addComponent(PhongMaterial())
-        # elif type == NodeType.Box:
-        #     result.addComponent(Translate())
-        #     result.addComponent(Box())
+
         result.init()
         return result
 
