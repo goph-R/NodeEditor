@@ -1,6 +1,6 @@
 from PySide2.Qt3DExtras import (Qt3DExtras)
 from PySide2.QtCore import QPropertyAnimation, Property, Signal, QObject
-from PySide2.QtGui import QVector3D, QQuaternion, QMatrix4x4
+from PySide2.QtGui import QVector3D, QQuaternion, QMatrix4x4, QColor
 from PySide2.Qt3DCore import (Qt3DCore)
 
 
@@ -54,6 +54,8 @@ class SceneView(Qt3DExtras.Qt3DWindow):
         super(SceneView, self).__init__()
 
         self.rootEntity = rootEntity
+
+        self.defaultFrameGraph().setClearColor(QColor('#333'))
 
         # Camera
         self.camera().lens().setPerspectiveProjection(45, 16 / 9, 0.1, 1000)

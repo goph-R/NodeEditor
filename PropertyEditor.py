@@ -43,8 +43,8 @@ class PropertyEditor(QTreeWidget):
     def _createAllItems(self):
         for type, properties in self._allProperties().items():
             topItem = self._createComponentItem(type)
-            #if type == ComponentType.General:
-            #    self._createNodeTypeItem(topItem)
+            if type == ComponentType.General:
+               self._createNodeTypeItem(topItem)
             for property in properties:
                 item = PropertyEditorItem(topItem)
                 item.setText(0, property.label())
@@ -84,7 +84,7 @@ class PropertyEditor(QTreeWidget):
     def _itemsForNode(self, node):
         result = []
         names = NodeType.Names()
-        #self._nodeTypeItem.setText(1, names[node.type()])
+        self._nodeTypeItem.setText(1, names[node.type()])
         for i in range(self.topLevelItemCount()):
             item = self.topLevelItem(i)
             type = item.data(0, Qt.UserRole)
@@ -98,7 +98,7 @@ class PropertyEditor(QTreeWidget):
     def _itemsForComponent(self, component, parentItem):
         result = []
         for column, property in enumerate(component.propertyMap()):
-            offset = 0 # 1 if component.type() == ComponentType.General else 0  # the first item of General is Type
+            offset = 1 if component.type() == ComponentType.General else 0  # the first item of General is Type
             item = parentItem.child(column + offset)
             item.setProperty(property)
             result.append(item)
@@ -117,8 +117,8 @@ class PropertyEditor(QTreeWidget):
 
     def _mapField(self, current, item):
         property = item.property()
-        #if not property:  # General/Type doesn't have a property
-        #    return
+        if not property:  # General/Type doesn't have a property
+           return
         field = self.itemWidget(item, 1)
         parent = current.parent()
         readOnly = property.readOnly() or not parent.isValid()  # the top level nodes are read only
