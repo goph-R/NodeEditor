@@ -23,5 +23,5 @@ class General(Component):
 
     def createPropertyMap(self):
         return [
-            ComponentProperty('Name', 'name', str),  # C++: we have to use a ComponentPropertyType, can't pass type as an argument
+            ComponentProperty('Name', 'nameProperty', str, True),  # C++: we have to use a ComponentPropertyType, can't pass type as an argument
         ]

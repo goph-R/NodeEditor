@@ -1,7 +1,11 @@
+from PySide2.Qt3DCore import (Qt3DCore)
+
 class Node(object):
 
     def __init__(self, type, parent):
         super(Node, self).__init__()
+        parentEntity = parent.entity() if parent else None
+        self._entity = Qt3DCore.QEntity(parentEntity)
         self._type = type
         self._parent = parent
         self._children = []  # C++: QList<Node*>
@@ -11,11 +15,16 @@ class Node(object):
         if parent is not None:
             parent.addChild(self)
 
+    def entity(self):
+        return self._entity
+
     def type(self):
         return self._type
 
     def addComponent(self, component):
         self._components[component.type()] = component
+        if component.addToEntity():
+            self._entity.addComponent(component.component())
 
     def hasComponent(self, type):
         return type in self._components

@@ -1,5 +1,6 @@
 from component.Box import Box
 from component.General import General
+from component.PhongMaterial import PhongMaterial
 from component.Sphere import Sphere
 from component.Translate import Translate
 from node.Node import Node
@@ -14,11 +15,11 @@ class NodeFactory(object):
         result = Node(type, parent)
         result.addComponent(general)
         if type == NodeType.Sphere:
-            result.addComponent(Translate())
             result.addComponent(Sphere())
-        elif type == NodeType.Box:
-            result.addComponent(Translate())
-            result.addComponent(Box())
+            result.addComponent(PhongMaterial())
+        # elif type == NodeType.Box:
+        #     result.addComponent(Translate())
+        #     result.addComponent(Box())
         result.init()
         return result
 

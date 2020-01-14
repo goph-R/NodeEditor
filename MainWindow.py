@@ -25,10 +25,14 @@ class MainWindow(QMainWindow):
         childNode0 = nodeFactory.create(NodeType.General, 'RightPirateLeg', rootNode)
         childNode1 = nodeFactory.create(NodeType.Sphere, 'RightPirateLeg_END', childNode0)
         childNode2 = nodeFactory.create(NodeType.General, 'LeftFemur', rootNode)
-        childNode3 = nodeFactory.create(NodeType.Box, 'LeftTibia', childNode2)
-        childNode4 = nodeFactory.create(NodeType.Box, 'LeftFoot', childNode3)
-        childNode5 = nodeFactory.create(NodeType.Box, 'LeftFoot_END', childNode4)
+        # childNode3 = nodeFactory.create(NodeType.Box, 'LeftTibia', childNode2)
+        # childNode4 = nodeFactory.create(NodeType.Box, 'LeftFoot', childNode3)
+        # childNode5 = nodeFactory.create(NodeType.Box, 'LeftFoot_END', childNode4)
         self._model = SceneGraphModel(rootNode)
+
+        self._sceneView = SceneView(rootNode.entity())
+        self._container = self.createWindowContainer(self._sceneView)
+
 
         # scene graph view
         self._treeView = QTreeView()
@@ -66,8 +70,6 @@ class MainWindow(QMainWindow):
 
         # central widget
         #button = QPushButton()
-        self._sceneView = SceneView()
-        self._container = self.createWindowContainer(self._sceneView)
         self.setCentralWidget(self._container)
 
         # selection change event
@@ -76,6 +78,7 @@ class MainWindow(QMainWindow):
 
         # click event
         #button.clicked.connect(self.buttonClicked)
+        #self._model.dataChanged.connect(self.modelDataChanged)
 
     def selectedNode(self):
         indices = self._treeView.selectedIndexes()
@@ -84,6 +87,9 @@ class MainWindow(QMainWindow):
             self._selectedIndex = indices[0]
             result = self._selectedIndex.internalPointer()
         return result
+
+    def modelDataChanged(self, indexStart, indexEnd):
+        self._container.update()
 
     def commitChange(self):
         self._model.dataChanged.emit(self._selectedIndex, self._selectedIndex)

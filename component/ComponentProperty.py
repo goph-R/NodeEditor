@@ -1,11 +1,15 @@
 class ComponentProperty(object):
 
-    def __init__(self, label, name, type, readOnly=False):
+    def __init__(self, label, name, type, own=False, readOnly=False):
+        self._name = name
+        self._own = own
         self._label = label
-        self._name = name + 'Property'  # C++: 'Property' must be removed, this is only because of Python
         self._type = type  # C++: use a ComponentPropertyType Q_ENUM
         self._readOnly = readOnly
         self._column = None
+
+    def own(self):
+        return self._own
 
     def label(self):
         return self._label

@@ -1,4 +1,5 @@
 from PySide2.QtCore import Property
+from PySide2.Qt3DExtras import (Qt3DExtras)
 
 from component.Component import Component
 from component.ComponentProperty import ComponentProperty
@@ -10,15 +11,8 @@ class Sphere(Component):
     def __init__(self):
         super(Sphere, self).__init__()
         self._type = ComponentType.Sphere
-        self._radius = 0.5
-
-    def radius(self):
-        return self._radius
-
-    def setRadius(self, value):
-        self._radius = value
-
-    radiusProperty = Property(float, radius, setRadius)
+        self._component = Qt3DExtras.QSphereMesh()
+        self._component.setRadius(5)
 
     def createPropertyMap(self):
         return [
