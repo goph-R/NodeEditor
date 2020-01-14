@@ -4,12 +4,13 @@ from field.StringField import StringField
 
 class FieldFactory(object):
 
-    def create(self, type):
+    def create(self, property):
         result = None
+        type = property.type()
         if type == str:
-            result = StringField()
+            result = StringField(property)
         elif type == float:
-            result = FloatField()
+            result = FloatField(property)
         result.init()
         return result
 

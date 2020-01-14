@@ -6,14 +6,13 @@ class Field(QWidget):
 
     changed = Signal()
 
-    def __init__(self):
+    def __init__(self, property):
         super(Field, self).__init__()
         self._widget = None
-        self._layout = QHBoxLayout(self)  # without this the child widget will not expand
+        self._layout = QHBoxLayout(self)  # without this the child widget will not be expanded
         self._layout.setContentsMargins(0, 0, 0, 0)
 
     def init(self):
-        #self._widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self._layout.addWidget(self._widget)
 
     def emitChanged(self):

@@ -16,5 +16,5 @@ class Sphere(Component):
 
     def createPropertyMap(self):
         return [
-            ComponentProperty('Radius', 'radius', float)
+            ComponentProperty('Radius', 'radius', float, min=0)
         ]

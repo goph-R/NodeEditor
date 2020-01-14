@@ -6,8 +6,8 @@ from field.Field import Field
 
 class StringField(Field):
 
-    def __init__(self):
-        super(StringField, self).__init__()
+    def __init__(self, property):
+        super(StringField, self).__init__(property)
         self._widget = QLineEdit()
         self._widget.textChanged.connect(self.emitChanged)
 

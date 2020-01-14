@@ -46,7 +46,7 @@ class PropertyEditor(QTreeWidget):
             for property in properties:
                 item = PropertyEditorItem(topItem)
                 item.setText(0, property.label())
-                field = self._fieldFactory.create(property.type())
+                field = self._fieldFactory.create(property)
                 self.setItemWidget(item, 1, field)
 
     def _allProperties(self):

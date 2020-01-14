@@ -1,11 +1,13 @@
 class ComponentProperty(object):
 
-    def __init__(self, label, name, type, own=False, readOnly=False):
+    def __init__(self, label, name, type, own=False, readOnly=False, min=-100000, max=100000):
         self._name = name
         self._own = own
         self._label = label
         self._type = type  # C++: use a ComponentPropertyType Q_ENUM
         self._readOnly = readOnly
+        self._min = min
+        self._max = max
         self._column = None
 
     def own(self):
@@ -28,3 +30,9 @@ class ComponentProperty(object):
 
     def name(self):
         return self._name
+
+    def min(self):
+        return self._min
+
+    def max(self):
+        return self._max

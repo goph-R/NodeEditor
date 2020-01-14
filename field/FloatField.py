@@ -6,10 +6,12 @@ from field.Field import Field
 
 class FloatField(Field):
 
-    def __init__(self):
-        super(FloatField, self).__init__()
+    def __init__(self, property):
+        super(FloatField, self).__init__(property)
         self._widget = QDoubleSpinBox()
         self._widget.valueChanged.connect(self.emitChanged)
+        self._widget.setMinimum(property.min())
+        self._widget.setMaximum(property.max())
 
     def value(self):
         return self._widget.value()
