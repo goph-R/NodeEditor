@@ -26,12 +26,16 @@ class Vector3Field(Field):
         return QVector3D(self._widgets[0].value(), self._widgets[1].value(), self._widgets[2].value())
 
     def setValue(self, value):
+        for i in range(3):
+            self._widgets[i].blockSignals(True)
         self._widgets[0].setValue(value.x())
         self._widgets[1].setValue(value.y())
         self._widgets[2].setValue(value.z())
+        for i in range(3):
+            self._widgets[i].blockSignals(False)
 
     def setReadOnly(self, value):
         for i in range(3):
             self._widgets[i].setReadOnly(value)
 
-    valueProperty = Property(QVector3D, value, Field.setValueBlocked)  # C++: should be in parent class
+    valueProperty = Property(QVector3D, value, setValue)  # C++: should be in parent class
