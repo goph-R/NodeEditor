@@ -78,7 +78,6 @@ class MainWindow(QMainWindow):
 
         # click event
         #button.clicked.connect(self.buttonClicked)
-        #self._model.dataChanged.connect(self.modelDataChanged)
 
     def selectedNode(self):
         indices = self._treeView.selectedIndexes()
@@ -87,9 +86,6 @@ class MainWindow(QMainWindow):
             self._selectedIndex = indices[0]
             result = self._selectedIndex.internalPointer()
         return result
-
-    def modelDataChanged(self, indexStart, indexEnd):
-        self._container.update()
 
     def commitChange(self):
         self._model.dataChanged.emit(self._selectedIndex, self._selectedIndex)

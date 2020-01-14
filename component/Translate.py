@@ -1,3 +1,4 @@
+from PySide2.Qt3DCore import (Qt3DCore)
 from PySide2.QtCore import Property
 
 from component.Component import Component
@@ -10,27 +11,31 @@ class Translate(Component):
     def __init__(self):
         super(Translate, self).__init__()
         self._type = ComponentType.Translate
-        self._x = 0
-        self._y = 0
-        self._z = 0
+        self._component = Qt3DCore.QTransform()
 
     def x(self):
-        return self._x
+        return self._component.translation().x()
 
     def setX(self, value):
-        self._x = value
+        v = self._component.translation()
+        v.setX(value)
+        self._component.setTranslation(v)
 
     def y(self):
-        return self._y
+        return self._component.translation().y()
 
     def setY(self, value):
-        self._y = value
+        v = self._component.translation()
+        v.setY(value)
+        self._component.setTranslation(v)
 
     def z(self):
-        return self._z
+        return self._component.translation().z()
 
     def setZ(self, value):
-        self._z = value
+        v = self._component.translation()
+        v.setZ(value)
+        self._component.setTranslation(v)
 
     xProperty = Property(float, x, setX)
     yProperty = Property(float, y, setY)
@@ -38,7 +43,7 @@ class Translate(Component):
 
     def createPropertyMap(self):
         return [
-            ComponentProperty('X', 'x', float),
-            ComponentProperty('Y', 'y', float),
-            ComponentProperty('Z', 'z', float)
+            ComponentProperty('X', 'xProperty', float, True),
+            ComponentProperty('Y', 'yProperty', float, True),
+            ComponentProperty('Z', 'zProperty', float, True)
         ]

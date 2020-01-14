@@ -1,4 +1,4 @@
-from PySide2.QtCore import Qt
+from PySide2.QtCore import Qt, QMetaObject
 from PySide2.QtWidgets import QTreeWidget, QTreeWidgetItem, QDataWidgetMapper, QAbstractItemView
 
 from component.ComponentType import ComponentType
@@ -24,6 +24,8 @@ class PropertyEditor(QTreeWidget):
         super(PropertyEditor, self).__init__()
         self._dataMapper = QDataWidgetMapper()
         self._dataMapper.setModel(model)
+        self._model = model
+        self._currentIndex = None
         self._widgetFactory = widgetFactory
         self._nodeFactory = nodeFactory
         # setup ui
@@ -43,7 +45,7 @@ class PropertyEditor(QTreeWidget):
             for property in properties:
                 item = PropertyEditorItem(topItem)
                 item.setText(0, property.label())
-                widget = self._widgetFactory.create(property)
+                widget = self._widgetFactory.create(property, self)
                 self.setItemWidget(item, 1, widget)
 
     def _allProperties(self):
@@ -72,8 +74,13 @@ class PropertyEditor(QTreeWidget):
 
     def changeSelection(self, current, prev):
         node = current.internalPointer()
+        self._currentIndex = current
         items = self._itemsForNode(node)
         self._setMapping(current, items)
+
+    # def submit(self):
+    #     print("wwtf")
+    #     self._model.dataChanged.emit(self._currentIndex, self._currentIndex)
 
     def _itemsForNode(self, node):
         result = []
@@ -117,5 +124,8 @@ class PropertyEditor(QTreeWidget):
             self._dataMapper.addMapping(widget, property.column(), bytes(mapToProperty, 'ascii'))
         else:
             self._dataMapper.addMapping(widget, property.column())
+        if property.type() == float:
+            widget.valueChanged.connect(self._dataMapper.submit)
+
 
 

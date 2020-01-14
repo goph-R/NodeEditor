@@ -1,9 +1,10 @@
+from PySide2.QtCore import QObject
 from PySide2.QtWidgets import QLineEdit, QDoubleSpinBox, QComboBox
 
 
-class PropertyWidgetFactory(object):
+class PropertyWidgetFactory(QObject):
 
-    def create(self, property):
+    def create(self, property, editor):
         result = None
         type = property.type()
         if type == str:

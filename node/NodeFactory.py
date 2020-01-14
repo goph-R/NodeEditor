@@ -15,6 +15,7 @@ class NodeFactory(object):
         result = Node(type, parent)
         result.addComponent(general)
         if type == NodeType.Sphere:
+            result.addComponent(Translate())
             result.addComponent(Sphere())
             result.addComponent(PhongMaterial())
         # elif type == NodeType.Box:
