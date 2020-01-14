@@ -1,12 +1,12 @@
 from PySide2.QtCore import Qt
-from PySide2.QtWidgets import QDockWidget, QMainWindow, QTreeView, QPushButton
+from PySide2.QtWidgets import QDockWidget, QMainWindow, QTreeView
 
 from component.ComponentType import ComponentType
 from node.NodeFactory import NodeFactory
 from node.NodeType import NodeType
 
 from PropertyEditor import PropertyEditor
-from PropertyWidgetFactory import PropertyWidgetFactory
+from field.FieldFactory import FieldFactory
 from SceneGraphModel import SceneGraphModel
 from scene.SceneView import SceneView
 
@@ -33,7 +33,6 @@ class MainWindow(QMainWindow):
         self._sceneView = SceneView(rootNode.entity())
         self._container = self.createWindowContainer(self._sceneView)
 
-
         # scene graph view
         self._treeView = QTreeView()
         self._treeView.setModel(self._model)
@@ -48,7 +47,7 @@ class MainWindow(QMainWindow):
         self.addDockWidget(Qt.LeftDockWidgetArea, dockWidget)
 
         # property editor
-        propertyEditor = PropertyEditor(self._model, PropertyWidgetFactory(), nodeFactory)
+        propertyEditor = PropertyEditor(self._model, nodeFactory, FieldFactory())
 
         dockWidget = QDockWidget()
         dockWidget.setWidget(propertyEditor)

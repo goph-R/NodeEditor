@@ -20,13 +20,14 @@ class PropertyEditorItem(QTreeWidgetItem):
 
 class PropertyEditor(QTreeWidget):
 
-    def __init__(self, model, widgetFactory, nodeFactory):
+    def __init__(self, model, nodeFactory, fieldFactory):
         super(PropertyEditor, self).__init__()
         self._dataMapper = QDataWidgetMapper()
         self._dataMapper.setModel(model)
+        self._dataMapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)
         self._model = model
         self._currentIndex = None
-        self._widgetFactory = widgetFactory
+        self._fieldFactory = fieldFactory
         self._nodeFactory = nodeFactory
         # setup ui
         self.setColumnCount(2)
@@ -45,8 +46,8 @@ class PropertyEditor(QTreeWidget):
             for property in properties:
                 item = PropertyEditorItem(topItem)
                 item.setText(0, property.label())
-                widget = self._widgetFactory.create(property, self)
-                self.setItemWidget(item, 1, widget)
+                field = self._fieldFactory.create(property.type())
+                self.setItemWidget(item, 1, field)
 
     def _allProperties(self):
         result = {}
@@ -77,10 +78,6 @@ class PropertyEditor(QTreeWidget):
         self._currentIndex = current
         items = self._itemsForNode(node)
         self._setMapping(current, items)
-
-    # def submit(self):
-    #     print("wwtf")
-    #     self._model.dataChanged.emit(self._currentIndex, self._currentIndex)
 
     def _itemsForNode(self, node):
         result = []
@@ -117,15 +114,12 @@ class PropertyEditor(QTreeWidget):
         property = item.property()
         if not property:  # General/Type doesn't have a property
             return
-        widget = self.itemWidget(item, 1)
-        self._widgetFactory.setReadOnly(current, property, widget)
-        mapToProperty = self._widgetFactory.mapToProperty(property.type())
-        if mapToProperty:
-            self._dataMapper.addMapping(widget, property.column(), bytes(mapToProperty, 'ascii'))
-        else:
-            self._dataMapper.addMapping(widget, property.column())
-        if property.type() == float:
-            widget.valueChanged.connect(self._dataMapper.submit)
+        field = self.itemWidget(item, 1)
+        parent = current.parent()
+        readOnly = property.readOnly() or not parent.isValid()  # the top level nodes are read only
+        field.setReadOnly(readOnly)
+        self._dataMapper.addMapping(field, property.column(), b'valueProperty')
+        field.changed.connect(self._dataMapper.submit)
 
 
 
