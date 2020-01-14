@@ -113,7 +113,7 @@ class PropertyEditor(QTreeWidget):
         self._dataMapper.setRootIndex(parent)
         self._dataMapper.setCurrentModelIndex(current)
         for field in fields:
-            field.changed.connect(self._dataMapper.submit)
+            field.changed.connect(self._dataMapper.submit)  # this MUST be after the setCurrentModelIndex
 
     def _mapField(self, current, item):
         property = item.property()
