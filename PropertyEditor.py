@@ -37,6 +37,8 @@ class PropertyEditor(QTreeWidget):
         self.setFocusPolicy(Qt.NoFocus)
         # create all items per component
         self._createAllItems()
+        self.resizeColumnToContents(0)
+        self.setColumnWidth(0, self.columnWidth(0) + 20)
 
     def _createAllItems(self):
         for type, properties in self._allProperties().items():

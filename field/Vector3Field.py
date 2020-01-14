@@ -1,6 +1,6 @@
 from PySide2.QtCore import Property
 from PySide2.QtGui import QVector3D
-from PySide2.QtWidgets import QDoubleSpinBox, QWidget, QHBoxLayout
+from PySide2.QtWidgets import QDoubleSpinBox, QWidget, QHBoxLayout, QLabel
 
 from field.Field import Field
 

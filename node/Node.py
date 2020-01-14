@@ -1,5 +1,6 @@
 from PySide2.Qt3DCore import (Qt3DCore)
 
+
 class Node(object):
 
     def __init__(self, type, parent):
@@ -82,6 +83,7 @@ class Node(object):
         return component.property(name)
 
     def setData(self, column, value):  # C++: the value is a QVariant
+        print(len(self._propertyMap))
         name = self._propertyMap[column].name()
         component = self._componentMap[column]
         component.setProperty(name, value)
