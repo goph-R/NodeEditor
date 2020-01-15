@@ -17,6 +17,6 @@ class PhongMaterial(Component):
         return [
             ComponentProperty('Ambient', 'ambient', QColor),
             ComponentProperty('Diffuse', 'diffuse', QColor),
-            ComponentProperty('Specular', 'ambient', QColor),
+            ComponentProperty('Specular', 'specular', QColor),
             ComponentProperty('Shininess', 'shininess', float, min=0, max=1000, step=10),
         ]
