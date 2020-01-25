@@ -249,15 +249,17 @@ QTreeView::item:selected:disabled, QTableView::item:selected:disabled{
 QTreeView::branch{
   background-color:palette(base);
 }
+/*
 QTreeView::branch:has-siblings:!adjoins-item{
-  border-image:url(":/images/icon_vline.png) 0;
+  border-image:url(":/images/icon_vline.png") 0;
 }
 QTreeView::branch:has-siblings:adjoins-item{
-  border-image:url(":/images/icon_branch_more.png) 0;
+  border-image:url(":/images/icon_branch_more.png") 0;
 }
 QTreeView::branch:!has-children:!has-siblings:adjoins-item{
-  border-image:url(":/images/icon_branch_end.png) 0;
+  border-image:url(":/images/icon_branch_end.png") 0;
 }
+*/
 QTreeView::branch:has-children:!has-siblings:closed,
 QTreeView::branch:closed:has-children:has-siblings{
   border-image:none;

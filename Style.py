@@ -24,6 +24,8 @@ class Style(QProxyStyle):
 
     def _load(self):
         resourcesPath = os.path.dirname(os.path.realpath(__file__)) + '/resources'
+        resourcesPath = resourcesPath.replace('\\', '/')
+        print(resourcesPath)
         with open(resourcesPath + '/style.qss', 'r') as file:
             data = file.read()
         return data.replace(':/images', resourcesPath + '/images')
